@@ -1,0 +1,98 @@
+package Day90Assignemts.Day90Assignemts;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
+
+public class TCS1_Myntra {
+
+	public static void main(String[] args) throws InterruptedException {
+		
+		
+		System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--disable-notifications");
+		ChromeDriver driver = new ChromeDriver(options);
+		
+		driver.get("https://www.myntra.com/");
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		
+	
+		Actions builder = new Actions(driver);
+		WebElement eleWomen = driver.findElementByXPath("(//a[text()='Women'])[1]");
+		builder.moveToElement(eleWomen).perform();
+				
+		
+		driver.findElementByLinkText("Jackets & Coats").click();
+		Thread.sleep(3000);
+		
+	
+		String total = driver.findElementByXPath("//span[@class='title-count']").getText();
+		System.out.println("Total count of item:"+total);
+		total = total.replaceAll("\\D", "");
+		int totalCount = Integer.parseInt(total);
+				
+		
+		String jacketsCount = driver.findElementByXPath("(//span[@class='categories-num'])[1]").getText();
+		String coatsCount = driver.findElementByXPath("(//span[@class='categories-num'])[2]").getText();
+		jacketsCount = jacketsCount.replaceAll("\\D", "");
+		coatsCount = coatsCount.replaceAll("\\D", "");
+		int jCount = Integer.parseInt(jacketsCount);
+		int cCount = Integer.parseInt(coatsCount);
+		int jacketCoats = jCount + cCount;
+		
+		System.out.println("Jackets count + Coats count = "+jacketCoats);
+		if(totalCount==jacketCoats)
+			System.out.println("The sum of jackets and coats matches with the total.");
+		else
+			System.out.println("Count not matched.");
+		
+
+		driver.findElementByXPath("(//label[@class='common-customCheckbox vertical-filters-label'])[2]").click();
+		
+		
+		driver.findElementByXPath("//div[@class='brand-more']").click();
+		
+	
+		driver.findElementByClassName("FilterDirectory-searchInput").sendKeys("MANGO");
+		driver.findElementByXPath("//label[@class=' common-customCheckbox']//div[1]").click();
+		
+
+		driver.findElementByXPath("//div[@class='FilterDirectory-titleBar']/span").click();
+		Thread.sleep(5000);
+		
+
+		List<WebElement> brandList = driver.findElementsByXPath("//h3[@class='product-brand']");
+		
+		for (WebElement eachBrand : brandList) {
+			String brand = eachBrand.getText();
+			System.out.println("Brand Name:"+brand);
+			}
+				
+	
+		WebElement sortBy = driver.findElementByClassName("sort-sortBy");
+		builder.moveToElement(sortBy).perform();
+		driver.findElementByXPath("//label[text()='Better Discount']").click();
+		
+		
+		List<WebElement> priceList = driver.findElementsByXPath("//span[@class='product-discountedPrice']");
+		String price = priceList.get(0).getText();
+		System.out.println("Price of the first displayed item: "+price);
+			   
+		
+		WebElement eleSize = driver.findElementByXPath("(//div[@class='product-productMetaInfo'])[1]");
+		builder.moveToElement(eleSize).perform();
+		
+		driver.findElementByXPath("//span[text()='wishlist now']").click();
+		
+		
+		driver.close();
+	}
+
+}
