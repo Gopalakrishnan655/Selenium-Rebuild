@@ -1,0 +1,96 @@
+package Day90Assignemts.Day90Assignemts;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
+
+public class Nykaa_website {
+	public static void main(String[] args) throws InterruptedException
+	{
+		System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
+
+		ChromeOptions options=new ChromeOptions();
+		options.addArguments("--disable-notification");
+		ChromeDriver driver= new ChromeDriver(options);
+
+				driver.get("https://www.nykaa.com/");
+						
+				driver.manage().window().maximize();
+				driver.manage().timeouts().implicitlyWait(50,TimeUnit.SECONDS);
+			
+				Actions builder=new Actions(driver);
+				WebElement ele=driver.findElementByXPath("//a[text()='brands']");
+				WebElement ele1=driver.findElementByXPath("//a[text()='Popular']");
+				
+				builder.moveToElement(ele).moveToElement(ele1).perform();
+				
+				driver.findElementByXPath("(//li[@class='brand-logo menu-links'])[5]").click();
+				
+				
+				
+				
+				Set<String> winSet=driver.getWindowHandles();
+				List<String> winList=new ArrayList<String>(winSet);
+			
+				driver.switchTo().window(winList.get(1));
+				if(driver.getTitle().contains("L'Oreal Paris"))
+					System.out.println("The new window has the title");
+				else System.out.println("The window doesnot hav title");
+				
+				
+				 
+				driver.findElementByXPath("//span[text()='Sort By : ']").click();
+		
+				driver.findElementByXPath("//span[text()='customer top rated']").click();
+				
+			
+				Thread.sleep(5000);
+				driver.findElementByXPath("(//div[@class='filter-sidebar__filter-title pull-left'])[1]").click();
+				driver.findElementByXPath("(//label[@for='chk_Shampoo_undefined']/span)[1]").click();
+			
+				driver.findElementByXPath("(//div[@class='filter-applied']/following::li)[1]");
+	
+				driver.findElementByXPath("//img[@alt=\"L'Oreal Paris Colour Protect Shampoo\"]").click();
+				
+				Set<String> winSet1=driver.getWindowHandles();
+				List<String> winList1=new ArrayList<String>(winSet1);
+				driver.switchTo().window(winList1.get(2));
+				String title=driver.getTitle();
+				System.out.println(title);
+				Thread.sleep(2000);
+				driver.findElementByXPath("//span[text()='175ml']").click();
+				Thread.sleep(2000);
+				String shampooprice=driver.findElementByXPath("(//span[@class='post-card__content-price-offer'])[1]").getText();
+				String price=shampooprice.replaceAll("\\D","");
+				int pricevalue=Integer.parseInt(price);
+				System.out.println(pricevalue);
+				Thread.sleep(2000);
+				
+				driver.findElementByXPath("//div[@class='pdp-tile-add-to-cart-wrapper']/button").click();
+				Thread.sleep(2000);
+			
+				driver.findElementByXPath("//div[@class='AddBagIcon']").click();
+				Thread.sleep(2000);
+			
+				String pr1=driver.findElementByXPath("//div[@class='value medium-strong']").getText();
+				
+				System.out.println("The grand total amount is"+pr1);
+		
+				driver.findElementByXPath("//span[text()='Proceed']").click();
+				
+				
+				driver.findElementByXPath("//button[text()='CONTINUE AS GUEST']").click();
+				
+		
+				String warningmsg=driver.findElementByXPath("//div[text()='Please expect delay in shipments because of the national lockdown']").getText();
+				System.out.println(warningmsg);
+				
+				driver.quit();
+	}
+}
